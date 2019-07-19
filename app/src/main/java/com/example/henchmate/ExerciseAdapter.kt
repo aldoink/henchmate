@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.henchmate.R.drawable.circle_button
 import kotlin.math.roundToInt
@@ -19,49 +18,42 @@ class ExerciseAdapter(private val context: Context, private val exercises: List<
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val exerciseView: View
         val holder: ViewHolder
+        val exercise = exercises[position]
 
         if (convertView == null) {
             exerciseView = LayoutInflater.from(context).inflate(R.layout.exercise_card, parent, false)
             holder = ViewHolder()
             holder.exerciseName = exerciseView.findViewById(R.id.exerciseHeader)
             holder.setRepInfo = exerciseView.findViewById(R.id.setRepInfo)
-            holder.layout = exerciseView.findViewById(R.id.exerciseCard)
+            holder.firstSetButton = exerciseView.findViewById(R.id.firstSet)
+            holder.firstSetButton!!.text = exercise.setHistory[0]
+            holder.firstSetButton!!.setOnClickListener { onSetButtonClicked(0, exercise, holder.firstSetButton!!) }
+            holder.layout = exerciseView.findViewById(R.id.exerciseCardLayout)
+            exerciseView.id = View.generateViewId()
             exerciseView.tag = holder
         } else {
             holder = convertView.tag as ViewHolder
             exerciseView = convertView
         }
-        val exercise = exercises[position]
+
         holder.exerciseName?.text = exercise.exerciseName
         holder.setRepInfo?.text = "${exercise.numberOfSets}x${exercise.repsPerSet} at ${exercise.weight}kg"
+        holder.buttons.add(holder.firstSetButton!!)
 
-        val btnSet = Button(context)
-        btnSet.id = View.generateViewId()
-        btnSet.text = "5"
-        btnSet.background = getDrawable(context, circle_button)
-        val lp = LinearLayout.LayoutParams(45.dp(context), 45.dp(context))
-        btnSet.layoutParams = lp
-        holder.layout?.addView(btnSet)
-
-        val constraints = ConstraintSet()
-        constraints.clone(holder.layout)
-        constraints.connect(btnSet.id, ConstraintSet.TOP, R.id.exerciseHeader, ConstraintSet.BOTTOM, 16.dp(context))
-        constraints.connect(
-            btnSet.id,
-            ConstraintSet.START,
-            ConstraintSet.PARENT_ID,
-            ConstraintSet.START,
-            16.dp(context)
-        )
-        constraints.connect(
-            btnSet.id,
-            ConstraintSet.BOTTOM,
-            ConstraintSet.PARENT_ID,
-            ConstraintSet.BOTTOM,
-            16.dp(context)
-        )
-
-        constraints.applyTo(holder.layout)
+        for (i in 1 until exercise.numberOfSets) {
+            val setButton = Button(context)
+            setButton.id = View.generateViewId()
+            setButton.background = getDrawable(context, circle_button)
+            setButton.layoutParams = ConstraintLayout.LayoutParams(45.dp(), 45.dp())
+            setButton.setOnClickListener { onSetButtonClicked(setNumber = i, exercise = exercise, button = setButton) }
+            holder.layout?.addView(setButton)
+            holder.buttons.add(setButton)
+            val set = ConstraintSet()
+            set.clone(holder.layout!!)
+            set.connect(setButton.id, ConstraintSet.LEFT, holder.buttons[i - 1].id, ConstraintSet.RIGHT, 24.dp())
+            set.connect(setButton.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 24.dp())
+            set.applyTo(holder.layout)
+        }
 
         return exerciseView
     }
@@ -78,13 +70,25 @@ class ExerciseAdapter(private val context: Context, private val exercises: List<
         return exercises.count()
     }
 
-    private fun Int.dp(context: Context): Int {
-        return (this * context.resources.displayMetrics.density).roundToInt()
-    }
-
     private class ViewHolder(
         var exerciseName: TextView? = null,
         var setRepInfo: TextView? = null,
-        var layout: ConstraintLayout? = null
+        var firstSetButton: Button? = null,
+        var layout: ConstraintLayout? = null,
+        var buttons: ArrayList<Button> = ArrayList()
     )
+
+    private fun onSetButtonClicked(setNumber: Int, exercise: Exercise, button: Button) {
+        when {
+            exercise.setHistory[setNumber] == "" -> exercise.setHistory[setNumber] = exercise.repsPerSet.toString()
+            exercise.setHistory[setNumber] == "0" -> exercise.setHistory[setNumber] = ""
+            else -> exercise.setHistory[setNumber] = exercise.setHistory[setNumber].toInt().minus(1).toString()
+        }
+        button.text = exercise.setHistory[setNumber]
+    }
+
+    private fun Int.dp(): Int {
+        return (this * (context.resources.displayMetrics.density)).roundToInt()
+    }
+
 }
