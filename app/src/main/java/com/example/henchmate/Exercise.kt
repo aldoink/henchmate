@@ -1,7 +1,5 @@
 package com.example.henchmate
 
-import kotlin.collections.ArrayList
-
 class Exercise(
     val exerciseName: String,
     val numberOfSets: Int,

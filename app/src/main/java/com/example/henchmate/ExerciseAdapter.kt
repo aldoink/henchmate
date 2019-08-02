@@ -37,12 +37,18 @@ class ExerciseAdapter(private val context: Context, private val exercises: List<
         }
 
         holder.exerciseName?.text = exercise.exerciseName
-        holder.setRepInfo?.text = "${exercise.numberOfSets}x${exercise.repsPerSet} at ${exercise.weight}kg"
+        holder.setRepInfo?.text = context.resources.getString(
+            R.string.set_rep_info,
+            exercise.numberOfSets,
+            exercise.repsPerSet,
+            exercise.weight
+        )
         holder.buttons.add(holder.firstSetButton!!)
 
         for (i in 1 until exercise.numberOfSets) {
             val setButton = Button(context)
             setButton.id = View.generateViewId()
+            setButton.tag = "Set Button"
             setButton.background = getDrawable(context, circle_button)
             setButton.layoutParams = ConstraintLayout.LayoutParams(45.dp(), 45.dp())
             setButton.setOnClickListener { onSetButtonClicked(setNumber = i, exercise = exercise, button = setButton) }

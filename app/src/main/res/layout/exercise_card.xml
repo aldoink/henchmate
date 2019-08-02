@@ -36,6 +36,7 @@
 
     <Button
         android:id="@+id/firstSet"
+        android:tag="Set Button"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="24dp"
