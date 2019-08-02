@@ -1,9 +1,7 @@
 package com.example.henchmate
 
-import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.core.internal.deps.guava.base.Predicate
 import android.support.test.espresso.core.internal.deps.guava.collect.Iterables
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.espresso.util.TreeIterables
@@ -14,7 +12,6 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.TypeSafeMatcher
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -83,13 +80,9 @@ class MainActivityTest {
             override fun matchesSafely(root: View): Boolean {
                 actualCount = 0
                 val iterable = TreeIterables.breadthFirstViewTraversal(root)
-                actualCount = Iterables.filter(iterable, withMatcherPredicate(viewMatcher)).count()
+                actualCount = Iterables.filter(iterable) { view -> viewMatcher.matches(view) }.count()
                 return actualCount == expectedCount
             }
         }
-    }
-
-    private fun withMatcherPredicate(matcher: Matcher<View>): Predicate<View> {
-        return Predicate { view -> matcher.matches(view) }
     }
 }
