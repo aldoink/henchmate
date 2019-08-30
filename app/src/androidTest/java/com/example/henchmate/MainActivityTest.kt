@@ -1,16 +1,17 @@
 package com.example.henchmate
 
 import android.support.test.espresso.Espresso.onData
+import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.core.internal.deps.guava.collect.Iterables
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.espresso.util.TreeIterables
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.TypeSafeMatcher
 import org.junit.Rule
 import org.junit.Test
@@ -44,11 +45,33 @@ class MainActivityTest {
     @Test
     fun has_correct_number_of_set_buttons() {
         onData(withExerciseName("Squats"))
-            .check(matches(withViewCount(withTagValue(`is`("Set Button")), 5)))
+            .check(matches(withViewCount(withTagContainingText("Set Button"), 5)))
         onData(withExerciseName("Bench Press"))
-            .check(matches(withViewCount(withTagValue(`is`("Set Button")), 3)))
+            .check(matches(withViewCount(withTagContainingText("Set Button"), 3)))
         onData(withExerciseName("Bent Over Rows"))
-            .check(matches(withViewCount(withTagValue(`is`("Set Button")), 1)))
+            .check(matches(withViewCount(withTagContainingText("Set Button"), 1)))
+    }
+
+    @Test
+    fun clicking_set_button_adjusts_rep_count() {
+        onData(withExerciseName("Bench Press"))
+            .onChildView(withId(R.id.firstSet))
+            .perform(click())
+            .check(matches(withText("5")))
+            .perform(click())
+            .check(matches(withText("4")))
+            .perform(click())
+            .check(matches(withText("3")))
+            .perform(click())
+            .check(matches(withText("2")))
+            .perform(click())
+            .check(matches(withText("1")))
+            .perform(click())
+            .check(matches(withText("0")))
+            .perform(click())
+            .check(matches(withText("")))
+            .perform(click())
+            .check(matches(withText("5")))
     }
 
     private fun withExerciseName(name: String): Matcher<Exercise> {
@@ -63,6 +86,24 @@ class MainActivityTest {
 
         }
     }
+
+    private fun withTagContainingText(text: String): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("View should have a tag containing text: '${text}'")
+            }
+
+            override fun matchesSafely(item: View): Boolean {
+                return if (item.tag is String) {
+                    val tag = item.tag as String
+                    tag.contains(text)
+                } else {
+                    false
+                }
+            }
+        }
+    }
+
 
     private fun withViewCount(viewMatcher: Matcher<View>, expectedCount: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {

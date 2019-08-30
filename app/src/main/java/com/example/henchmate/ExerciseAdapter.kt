@@ -48,9 +48,10 @@ class ExerciseAdapter(private val context: Context, private val exercises: List<
         for (i in 1 until exercise.numberOfSets) {
             val setButton = Button(context)
             setButton.id = View.generateViewId()
-            setButton.tag = "Set Button"
+            setButton.tag = "Set Button $i"
             setButton.background = getDrawable(context, circle_button)
             setButton.layoutParams = ConstraintLayout.LayoutParams(45.dp(), 45.dp())
+            setButton.textSize = 18f
             setButton.setOnClickListener { onSetButtonClicked(setNumber = i, exercise = exercise, button = setButton) }
             holder.layout?.addView(setButton)
             holder.buttons.add(setButton)
