@@ -1,9 +1,9 @@
 package com.example.henchmate
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
-import android.support.v4.content.ContextCompat.getDrawable
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat.getDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +21,7 @@ class ExerciseAdapter(private val context: Context, private val exercises: List<
         val exercise = exercises[position]
 
         if (convertView == null) {
-            exerciseView = LayoutInflater.from(context).inflate(R.layout.exercise_card, parent, false)
+            exerciseView = LayoutInflater.from(context).inflate(R.layout.item_exercise_card, parent, false)
             holder = ViewHolder()
             holder.exerciseName = exerciseView.findViewById(R.id.exerciseHeader)
             holder.setRepInfo = exerciseView.findViewById(R.id.setRepInfo)
