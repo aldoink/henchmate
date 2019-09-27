@@ -3,5 +3,5 @@
     <string name="exercise_placeholder">Exercise Name</string>
     <string name="reps">0</string>
     <string name="set_rep_info">%1$dx%2$d at %3$skg</string>
-    <string name="set_button">Set Button</string>
+    <string name="finish_button">Finish</string>
 </resources>

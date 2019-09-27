@@ -24,10 +24,10 @@ import org.junit.runner.RunWith
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest {
+class WorkoutActivityTest {
     @Rule
     @JvmField
-    val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+    val rule: ActivityTestRule<WorkoutActivity> = ActivityTestRule(WorkoutActivity::class.java)
 
     @Test
     fun displays_correct_set_rep_info() {
