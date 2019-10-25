@@ -81,7 +81,7 @@ class WorkoutActivityTest {
             }
 
             override fun matchesSafely(item: Exercise?): Boolean {
-                return item?.exerciseName == name
+                return item?.name == name
             }
 
         }

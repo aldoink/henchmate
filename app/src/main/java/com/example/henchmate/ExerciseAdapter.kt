@@ -1,15 +1,15 @@
 package com.example.henchmate
 
 import android.content.Context
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat.getDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat.getDrawable
 import com.example.henchmate.R.drawable.circle_button
 import kotlin.math.roundToInt
 
@@ -36,7 +36,7 @@ class ExerciseAdapter(private val context: Context, private val exercises: List<
             exerciseView = convertView
         }
 
-        holder.exerciseName?.text = exercise.exerciseName
+        holder.exerciseName?.text = exercise.name
         holder.setRepInfo?.text = context.resources.getString(
             R.string.set_rep_info,
             exercise.numberOfSets,

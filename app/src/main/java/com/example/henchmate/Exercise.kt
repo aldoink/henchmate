@@ -1,7 +1,14 @@
 package com.example.henchmate
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 class Exercise(
-    val exerciseName: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Number,
+    val workoutId: Number,
+    val name: String,
     val numberOfSets: Int,
     val repsPerSet: Int,
     val weight: Number,
